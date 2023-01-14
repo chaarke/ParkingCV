@@ -7,15 +7,9 @@ import DrivingPage from "./Driving";
 import FirstRunPage from "./FirstRun";
 import ErrorPage from "./ErrorPage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoatConfigType } from "./Types";
 
 type Pages = 'home' | 'loading' | 'account' | 'lot' | 'profile' | 'driving' | 'first_run';
-
-export type GoatConfigType = {
-  userType: 'student' | 'staff';
-  preferredLot: string;
-  favorites: string[];
-  firstOpen: boolean;
-};
 
 function ProfilePage() {
   return null;
@@ -57,7 +51,7 @@ function App(): JSX.Element {
     case 'driving':
       return <DrivingPage/>
     case 'first_run':
-      return <FirstRunPage goHome={() => setPage('home')}/>
+      return <FirstRunPage goHome={() => setPage('home')} lots={null}/>
     default:
       return <ErrorPage/>
   }

@@ -3,14 +3,17 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import PagerView from "react-native-pager-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FirstRunProps } from "./Types";
 
-type Props = {
-  goHome: () => void;
-};
-
-function FirstRunPage({goHome}: Props): JSX.Element {
+function FirstRunPage({goHome, lots}: FirstRunProps): JSX.Element {
   const [userType, setUserType] = useState<null | 'student' | 'staff'>(null);
   const viewPagerRef = useRef<PagerView>(null);
+
+  /* TODO temp data */
+  const lot = {spaces: 10, isFavorite: true, name: 'West'};
+  const lot2 = {spaces: 3, isFavorite: false, name: 'Library'};
+  const lot3 = {spaces: 5, isFavorite: true, name: 'Hackfeld'};
+  const lotsTempList = [lot, lot2, lot3];
 
   const userTypePress = (newUserType: 'student' | 'staff') => {
     setUserType(newUserType);
@@ -30,6 +33,10 @@ function FirstRunPage({goHome}: Props): JSX.Element {
     }
   };
 
+  const lotList = lotsTempList.map((lot, idx) =>
+    <Button mode="contained" key={idx} onPress={() => lotPress(lot.name)}>{lot.name}</Button>
+  );
+
   return (
     <SafeAreaView style={styles.flex}>
       <PagerView style={styles.flex} initialPage={0} ref={viewPagerRef}>
@@ -48,7 +55,7 @@ function FirstRunPage({goHome}: Props): JSX.Element {
         <View key="2">
           <Text style={styles.prompt}>My preferred lot is...</Text>
           <ScrollView>
-
+            {lotList}
           </ScrollView>
         </View>
       </PagerView>
