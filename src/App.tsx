@@ -5,8 +5,8 @@
  * @format
  */
 
-import React, {useState} from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useState } from 'react';
+import type { PropsWithChildren } from 'react';
 import {
   Image, ImageSourcePropType,
   SafeAreaView,
@@ -22,6 +22,8 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { FAB, Card, Button, Provider as PaperProvider } from 'react-native-paper'
+
 
 type LotProps = {
   spaces: number;
@@ -29,13 +31,19 @@ type LotProps = {
   name: string;
 };
 
-function Lot({spaces, isFavorite, name}: LotProps): JSX.Element {
+function Lot({ spaces, isFavorite, name }: LotProps): JSX.Element {
   return (
-    <View>
-      <Text>{spaces}</Text>
-      <Icon name={isFavorite ? "heart" : "heart-o"} color="pink" />
-      <Text>{name}</Text>
-    </View>
+    <Card>
+      <Card.Title
+        title={`${spaces} Spots Remaining`}
+        subtitle={`at ${name} lot`}
+      />
+      <Card.Actions>
+        <Button icon={isFavorite ? 'heart' : 'heart-outline'}>
+          Favorite
+        </Button>
+      </Card.Actions>
+    </Card>
   );
 }
 
@@ -47,20 +55,22 @@ function App(): JSX.Element {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <Text>There are x open spots</Text>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Text>Favorites:</Text>
-        <Lot isFavorite={true} name={'West'} spaces={4}></Lot>
-        <Text>Lots:</Text>
-      </ScrollView>
-    </SafeAreaView>
+    <PaperProvider>
+      <SafeAreaView style={backgroundStyle}>
+        <Text>There are x open spots</Text>
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={backgroundStyle.backgroundColor}
+        />
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={backgroundStyle}>
+          <Text>Favorites:</Text>
+          <Lot isFavorite={true} name={'West'} spaces={4}></Lot>
+          <Text>Lots:</Text>
+        </ScrollView>
+      </SafeAreaView>
+    </PaperProvider>
   );
 }
 
@@ -83,4 +93,6 @@ const styles = StyleSheet.create({
   },
 });
 
+
 export default App;
+
