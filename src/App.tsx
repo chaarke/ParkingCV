@@ -11,10 +11,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 type Pages = 'home' | 'loading' | 'account' | 'lot' | 'profile' | 'driving' | 'first_run';
 
 export type GoatConfigType = {
-  usertype: 'student' | 'staff';
-  preferred_lot: string;
+  userType: 'student' | 'staff';
+  preferredLot: string;
   favorites: string[];
-  first_open: boolean;
+  firstOpen: boolean;
 };
 
 function ProfilePage() {
@@ -33,10 +33,10 @@ function App(): JSX.Element {
       } else {
         /* No config is set. Request the first run page. */
         setStateConfig({
-          usertype: 'student',
-          preferred_lot: '',
+          userType: 'student',
+          preferredLot: '',
           favorites: [],
-          first_open: true,
+          firstOpen: true,
         });
         setPage('first_run');
       }
@@ -57,7 +57,7 @@ function App(): JSX.Element {
     case 'driving':
       return <DrivingPage/>
     case 'first_run':
-      return <FirstRunPage/>
+      return <FirstRunPage goHome={() => setPage('home')}/>
     default:
       return <ErrorPage/>
   }
