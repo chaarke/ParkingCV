@@ -1,7 +1,6 @@
-import React from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { Button, Modal, Text, Portal } from "react-native-paper";
+import { Text, View } from "react-native";
+import React, { useState } from "react";
+import {Card, Button, IconButton, Provider as PaperProvider} from 'react-native-paper';
 
 type LotProps = {
   spaces: number;
@@ -9,39 +8,52 @@ type LotProps = {
   name: string;
 };
 
+type LotList = {
+  lots: LotProps[]
+}
+
 function Lot({spaces, isFavorite, name}: LotProps): JSX.Element {
+  const [favorite, setFavorite] = useState(isFavorite);
+  
   return (
-    <View>
-      <Text>{spaces}</Text>
-      <Icon name={isFavorite ? "heart" : "heart-o"} color="pink" />
-      <Text>{name}</Text>
-    </View>
+    <Card style={{marginBottom: 10}}>
+      <Card.Title
+        title={`${spaces} Spots Remaining`}
+        subtitle={`at ${name} lot`}
+      />
+      <Card.Actions>
+          {favorite ? <IconButton icon='heart' mode={"contained"} onPress={() => setFavorite(false)}/> : <Button icon='heart-outline' mode={"contained"} onPress={() => setFavorite(true)}>Favorite</Button>}
+      </Card.Actions>
+    </Card>
   );
 }
 
-function HomePage(): JSX.Element {
-  const [visible, setVisible] = React.useState(false);
-  const hideModal = () => setVisible(false);
+function LotList(list: LotList): JSX.Element {
 
-  /* Wait a tiny bit to pop up the warning modal */
-  setTimeout(() => setVisible(true), 100);
+  let favorites = list.lots.filter( (lot) => lot.isFavorite );
+  let nonfavorites = list.lots.filter( (lot) =>  !lot.isFavorite );
+
+  let sorted = favorites.concat(nonfavorites);
+  const lotlist = sorted.map((lot, idx) => <Lot spaces={lot.spaces} isFavorite={lot.isFavorite} name={lot.name} key={idx}/> )
 
   return (
-    <SafeAreaView>
-      <Portal>
-        <Modal visible={visible} onDismiss={hideModal}>
-          <Text>
-            <b>Distracted driving is dangerous.</b>
-            Always follow local driving laws and keep your attention on the road.
-          </Text>
-          <Button onPress={hideModal}>I Understand</Button>
-        </Modal>
-      </Portal>
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
+    <View style={{margin: 5}}>{lotlist}</View>
+  )
+}
 
-      </ScrollView>
-    </SafeAreaView>
-  );
+function HomePage(): JSX.Element {
+  let lot: LotProps = {spaces: 10, isFavorite: true, name: 'West'};
+  let lot2: LotProps = {spaces: 3, isFavorite: false, name: 'Library'}
+  let lot3: LotProps = {spaces: 5, isFavorite: true, name: 'Hackfeld'}
+
+  return (
+    <PaperProvider>
+      <LotList lots={[lot, lot2, lot3]} />
+      <Button icon={'refresh'}>
+          Reload Data
+      </Button>
+    </PaperProvider>
+  )
 }
 
 export default HomePage;
