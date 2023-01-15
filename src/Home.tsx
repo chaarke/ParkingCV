@@ -1,16 +1,10 @@
 import { SafeAreaView, View } from "react-native";
 import React, { useState } from "react";
 import { Card, Button, IconButton, Provider as PaperProvider, Appbar } from 'react-native-paper';
-import { LotProps } from "./Types";
+import { HomeProps, LotListProps, LotPropsReal } from "./Types";
 import { SafeAreaProvider, useSafeAreaInsets} from "react-native-safe-area-context";
 
-type LotList = {
-  lots: LotProps[]
-}
-
-function Lot({ spaces, isFavorite, name }: LotProps): JSX.Element {
-  const [favorite, setFavorite] = useState(isFavorite);
-
+function Lot({ spaces, isFavorite, name , flipFavorite}: LotPropsReal): JSX.Element {
   return (
     <Card style={{ marginBottom: 10 }}>
       <Card.Title
@@ -18,24 +12,24 @@ function Lot({ spaces, isFavorite, name }: LotProps): JSX.Element {
         subtitle={`at ${name} lot`}
       />
       <Card.Actions>
-        {favorite ? <IconButton icon='heart' mode={"contained"} onPress={() => setFavorite(false)} /> : <Button icon='heart-outline' mode={"contained"} onPress={() => setFavorite(true)}>Favorite</Button>}
+        {isFavorite ? <IconButton accessibilityLabel="favorite button" icon="heart" mode={"contained"}
+                                    onPress={() => flipFavorite(name)} accessibilityLabelledBy=""
+                                    accessibilityLanguage="us-en" />
+            : <Button icon='heart-outline' mode={"contained"} onPress={() => flipFavorite(name)}>Favorite</Button>}
       </Card.Actions>
     </Card>
   );
 }
 
-function LotList(list: LotList): JSX.Element {
+function LotList({flipFavorite, lots}: LotListProps): JSX.Element {
+  let favorites = lots.filter(lot => lot.isFavorite );
+  let nonFavorites = lots.filter( (lot) =>  !lot.isFavorite );
 
-  let favorites = list.lots.filter((lot) => lot.isFavorite);
-  //favorites.sort((a, b) => (a.spaces > b.spaces ? 1 : 0));
-  let nonfavorites = list.lots.filter((lot) => !lot.isFavorite);
-  //favorites.sort((a,b) => (a.spaces > b.spaces ? 1 : 0));
-
-  let sorted = favorites.concat(nonfavorites);
-  const lotlist = sorted.map((lot, idx) => <Lot spaces={lot.spaces} isFavorite={lot.isFavorite} name={lot.name} key={idx} />)
+  let sorted = favorites.concat(nonFavorites);
+  const lotList = sorted.map((lot, idx) => <Lot spaces={lot.spaces} isFavorite={lot.isFavorite} name={lot.name} flipFavorite={flipFavorite} key={idx}/> )
 
   return (
-    <View style={{ margin: 5 }}>{lotlist}</View>
+    <View style={{ margin: 5 }}>{lotList}</View>
   )
 }
 
@@ -49,8 +43,8 @@ const HomePage: React.FC = () => {
   return (
       <PaperProvider>
         <SafeAreaView>
-          <LotList lots={[lot, lot2, lot3]} />
-          <Button icon={'refresh'}>
+          <LotList flipFavorite={flipFavorite} lots={lots} />
+          <Button icon={'refresh'} onPress={refresh}>
             Reload Data
           </Button>
           <Appbar safeAreaInsets={{bottom}} style={{ position: 'absolute', left: 0, right: 0, bottom: -375, height: 80+bottom }}>
