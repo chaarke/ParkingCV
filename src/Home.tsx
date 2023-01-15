@@ -1,10 +1,10 @@
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, ScrollView, RefreshControl } from "react-native";
 import React, { useState } from "react";
-import { Card, Button, IconButton, Provider as PaperProvider, Appbar } from 'react-native-paper';
+import { Card, Button, IconButton, Provider as PaperProvider, Appbar, Text } from 'react-native-paper';
 import { HomeProps, LotListProps, LotPropsReal } from "./Types";
-import { SafeAreaProvider, useSafeAreaInsets} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-function Lot({ spaces, isFavorite, name , flipFavorite}: LotPropsReal): JSX.Element {
+function Lot({ spaces, isFavorite, name, flipFavorite }: LotPropsReal): JSX.Element {
   return (
     <Card style={{ marginBottom: 10 }}>
       <Card.Title
@@ -13,45 +13,52 @@ function Lot({ spaces, isFavorite, name , flipFavorite}: LotPropsReal): JSX.Elem
       />
       <Card.Actions>
         {isFavorite ? <IconButton accessibilityLabel="favorite button" icon="heart" mode={"contained"}
-                                    onPress={() => flipFavorite(name)} accessibilityLabelledBy=""
-                                    accessibilityLanguage="us-en" />
-            : <Button icon='heart-outline' mode={"contained"} onPress={() => flipFavorite(name)}>Favorite</Button>}
+          onPress={() => flipFavorite(name)} accessibilityLabelledBy=""
+          accessibilityLanguage="us-en" />
+          : <Button icon='heart-outline' mode={"contained"} onPress={() => flipFavorite(name)}>Favorite</Button>}
       </Card.Actions>
     </Card>
   );
 }
 
-function LotList({flipFavorite, lots}: LotListProps): JSX.Element {
-  let favorites = lots.filter(lot => lot.isFavorite );
-  let nonFavorites = lots.filter( (lot) =>  !lot.isFavorite );
+function LotList({ flipFavorite, lots, refresh }: LotListProps): JSX.Element {
+  const [refreshing, setRefreshing] = useState(false);
+  let favorites = lots.filter(lot => lot.isFavorite);
+  let nonFavorites = lots.filter((lot) => !lot.isFavorite);
 
   let sorted = favorites.concat(nonFavorites);
-  const lotList = sorted.map((lot, idx) => <Lot spaces={lot.spaces} isFavorite={lot.isFavorite} name={lot.name} flipFavorite={flipFavorite} key={idx}/> )
+  const lotList = sorted.map((lot, idx) => <Lot spaces={lot.spaces} isFavorite={lot.isFavorite} name={lot.name} flipFavorite={flipFavorite} key={idx} />)
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refresh();
+    setRefreshing(false);
+  }, []); 
 
   return (
-    <View style={{ margin: 5 }}>{lotList}</View>
+    <ScrollView 
+    style={{ marginHorizontal: 20 }}
+    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
+      {lotList}
+    </ScrollView>
   )
 }
 
-const HomePage: React.FC = () => {
-  let lot: LotProps = { spaces: 5, isFavorite: true, name: 'West' };
-  let lot2: LotProps = { spaces: 3, isFavorite: false, name: 'Library' }
-  let lot3: LotProps = { spaces: 10, isFavorite: true, name: 'Hackfeld' }
+function HomePage({ flipFavorite, lots, refresh }: HomeProps): JSX.Element {
 
   const { bottom } = useSafeAreaInsets();
 
   return (
-      <PaperProvider>
-        <SafeAreaView>
-          <LotList flipFavorite={flipFavorite} lots={lots} />
-          <Button icon={'refresh'} onPress={refresh}>
-            Reload Data
-          </Button>
-          <Appbar safeAreaInsets={{bottom}} style={{ position: 'absolute', left: 0, right: 0, bottom: -375, height: 80+bottom }}>
-            <Appbar.Action icon={"home"} />
-          </Appbar>
-        </SafeAreaView>
-      </PaperProvider>
+    <PaperProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Text variant="titleLarge" style={{ margin: 20 }}>Current Spaces</Text>
+        <LotList flipFavorite={flipFavorite} lots={lots} refresh={refresh} />
+        <Appbar safeAreaInsets={{ bottom }} style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 80 + bottom, justifyContent: 'center' }}>
+          <Appbar.Action icon={"home"} size={36} />
+          <Appbar.Action icon={"account-settings"} size={36} />
+        </Appbar>
+      </SafeAreaView>
+    </PaperProvider>
   )
 }
 
