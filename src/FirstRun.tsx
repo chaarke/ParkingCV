@@ -3,17 +3,23 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import PagerView from "react-native-pager-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FirstRunProps } from "./Types";
+import { FirstRunProps, LotProps } from "./Types";
 
 function FirstRunPage({goHome, lots}: FirstRunProps): JSX.Element {
   const [userType, setUserType] = useState<null | 'student' | 'staff'>(null);
   const viewPagerRef = useRef<PagerView>(null);
 
-  /* TODO temp data */
-  const lot = {spaces: 10, isFavorite: true, name: 'West'};
-  const lot2 = {spaces: 3, isFavorite: false, name: 'Library'};
-  const lot3 = {spaces: 5, isFavorite: true, name: 'Hackfeld'};
-  const lotsTempList = [lot, lot2, lot3];
+
+  let lotsList: LotProps[];
+  if (lots.length) {
+    lotsList = lots;
+  } else {
+    /* test data */
+    const lot = {spaces: 10, isFavorite: true, name: 'West'};
+    const lot2 = {spaces: 3, isFavorite: false, name: 'Library'};
+    const lot3 = {spaces: 5, isFavorite: true, name: 'Hackfeld'};
+    lotsList = [lot, lot2, lot3];
+  }
 
   const userTypePress = (newUserType: 'student' | 'staff') => {
     setUserType(newUserType);
@@ -33,7 +39,7 @@ function FirstRunPage({goHome, lots}: FirstRunProps): JSX.Element {
     }
   };
 
-  const lotList = lotsTempList.map((lot, idx) =>
+  const lotList: JSX.Element[] = lotsList.map((lot, idx) =>
     <Button mode="contained" key={idx} onPress={() => lotPress(lot.name)}>{lot.name}</Button>
   );
 
@@ -67,7 +73,6 @@ const styles = StyleSheet.create({
   flex: {flex: 1},
   view: {height: '100%', width: '100%'},
   prompt: {textAlign: 'center', textAlignVertical: 'center'},
-  buttonGroup: {},
   button: {height: 'auto', width: 'auto'},
 })
 
