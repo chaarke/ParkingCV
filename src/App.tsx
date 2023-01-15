@@ -19,17 +19,18 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 
 function filterLots(lots: LotData[], config: GoatConfigType): LotData[] {
+  console.log(config);
   return lots.filter(lot => {
     if (config.isVisitor) {
-      return lot.types.includes('Visitor');
+      return lot.type.includes('Visitor');
     }
-    if (config.userType === 'student' && lot.types.includes('Employee')) {
+    if (config.userType === 'student' && lot.type.includes('Employee')) {
       return false;
     }
-    if (config.commuterType === 'residential' && lot.types.includes('Residential')) {
+    if (config.commuterType === 'residential' && lot.type.includes('Residential')) {
       return true;
     }
-    return config.commuterType === 'commuter' && lot.types.includes('Commuter');
+    return config.commuterType === 'commuter' && lot.type.includes('Commuter');
   });
 }
 
@@ -50,9 +51,9 @@ function App(): JSX.Element {
       .then(r => r.json())
       .catch(error => {
         /* Use fake data */
-        const lot: LotData = { spaces: 10, name: 'West' , types: ['Commuter']};
-        const lot2: LotData = { spaces: 3, name: 'Library' , types: ['Visitor']};
-        const lot3: LotData = { spaces: 5, name: 'Hackfeld' , types: ['Residential', 'Employee']};
+        const lot: LotData = { spaces: 10, name: 'West' , type: ['Commuter']};
+        const lot2: LotData = { spaces: 3, name: 'Library' , type: ['Visitor']};
+        const lot3: LotData = { spaces: 5, name: 'Hackfeld' , type: ['Residential', 'Employee']};
         return [lot, lot2, lot3];
       });
   };
@@ -60,7 +61,9 @@ function App(): JSX.Element {
   const refreshLotData: RefreshLotDataFunction = () => {
     refreshPromise()
       .then(r => {
+        console.log(r);
         const filteredLots = filterLots(r, config);
+        console.log(filteredLots);
         setLotData(filteredLots.map(lot => {
           return Object.assign({}, lot,
             { isFavorite: config.favorites.includes(lot.name) });

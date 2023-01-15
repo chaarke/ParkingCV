@@ -14,7 +14,7 @@ export type GoatConfigType = {
 export type LotData = {
   spaces: number;
   name: string;
-  types: LotTypes[];
+  type: LotTypes[];
 };
 
 export type RefreshLotPromiseFunction = () => Promise<LotData[]>;
@@ -28,7 +28,7 @@ export type LotObject = {
   spaces: number;
   isFavorite: boolean;
   name: string;
-  types: LotTypes[];
+  type: LotTypes[];
 };
 
 export type LotProps = {
