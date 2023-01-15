@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Card, Button, IconButton, Provider as PaperProvider, Appbar, Text } from 'react-native-paper';
 import { HomeProps, LotListProps, LotPropsReal } from "./Types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import AppBar from "./AppBar";
 
 function Lot({ spaces, isFavorite, name, flipFavorite }: LotPropsReal): JSX.Element {
   return (
@@ -51,12 +52,9 @@ function HomePage({ flipFavorite, lots, refresh }: HomeProps): JSX.Element {
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }}>
-        <Text variant="titleLarge" style={{ margin: 20 }}>Current Spaces</Text>
+        <Text variant="headlineLarge" style={{ margin: 20, marginTop: 40}}>Current Spaces</Text>
         <LotList flipFavorite={flipFavorite} lots={lots} refresh={refresh} />
-        <Appbar safeAreaInsets={{ bottom }} style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 80 + bottom, justifyContent: 'center' }}>
-          <Appbar.Action icon={"home"} size={36} />
-          <Appbar.Action icon={"account-settings"} size={36} />
-        </Appbar>
+        <AppBar home={true} bottom={bottom} />
       </SafeAreaView>
     </PaperProvider>
   )

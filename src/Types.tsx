@@ -44,3 +44,9 @@ export type LotListProps = {
   lots: LotProps[];
   refresh: () => void;
 };
+
+export type AppBarProps = {
+  home?: Boolean;
+  account?: Boolean;
+  bottom: number;
+};
