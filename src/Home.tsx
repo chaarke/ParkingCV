@@ -1,8 +1,9 @@
 import { SafeAreaView, StyleSheet, RefreshControl, ScrollView } from "react-native";
 import React, { useState } from "react";
-import { Card, Button, IconButton, Provider as PaperProvider, Modal, Portal, Text, Appbar } from "react-native-paper";
+import { Card, Button, IconButton, Provider as PaperProvider, Modal, Portal, Text } from "react-native-paper";
 import { HomeProps, LotListProps, LotProps } from "./Types";
 import { useSafeAreaInsets} from "react-native-safe-area-context";
+import AppBar from "./AppBar";
 
 function Lot({ spaces, isFavorite, name , flipFavorite}: LotProps): JSX.Element {
   return (
@@ -63,15 +64,12 @@ function HomePage({ flipFavorite, lots, refresh }: HomeProps): JSX.Element {
       <SafeAreaView style={{ flex: 1 }}>
         {acknowledged ? (
           <>
-            <Text variant="titleLarge" style={{ margin: 20 }}>Current Spaces</Text>
+            <Text variant="headlineLarge" style={{ margin: 20, marginTop: 40}}>Current Spaces</Text>
             <LotList flipFavorite={flipFavorite} lots={lots} refresh={refresh} />
             <Button icon={'refresh'} onPress={refresh}>
               Reload Data
             </Button>
-            <Appbar safeAreaInsets={{ bottom }} style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 80 + bottom, justifyContent: 'center' }}>
-              <Appbar.Action accessibilityLanguage={"en-us"} accessibilityLabelledBy={""} icon={"home"} size={36} />
-              <Appbar.Action accessibilityLanguage={"en-us"} accessibilityLabelledBy={""} icon={"account-settings"} size={36} />
-            </Appbar>
+            <AppBar home={true} bottom={bottom} />
           </>
         ) : (
           <Portal>

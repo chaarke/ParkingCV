@@ -45,8 +45,15 @@ export type LotListProps = {
   refresh: () => void;
 };
 
+
 export type AccountProps = {
   config: GoatConfigType;
   setStateConfig: (newConfig: GoatConfigType) => void;
   lots: LotObject[];
 }
+
+export type AppBarProps = {
+  home?: Boolean;
+  account?: Boolean;
+  bottom: number;
+};
