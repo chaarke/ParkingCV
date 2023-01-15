@@ -1,10 +1,12 @@
 import { SetStateAction } from "react";
 
 export type Pages = 'home' | 'loading' | 'account' | 'lot' | 'profile' | 'driving' | 'first_run' | 'error';
+export type LotTypes = 'Commuter' | 'Residential' | 'Employee' | 'Visitor';
 
 export type GoatConfigType = {
   userType: 'student' | 'staff';
-  preferredLot: string;
+  commuterType: 'commuter' | 'residential';
+  isVisitor: boolean;
   favorites: string[];
   firstOpen: boolean;
 };
@@ -12,6 +14,7 @@ export type GoatConfigType = {
 export type LotData = {
   spaces: number;
   name: string;
+  types: LotTypes[];
 };
 
 export type RefreshLotPromiseFunction = () => Promise<LotData[]>;
@@ -24,6 +27,7 @@ export type LotObject = {
   spaces: number;
   isFavorite: boolean;
   name: string;
+  types: LotTypes[];
 };
 
 export type LotProps = {
@@ -36,7 +40,6 @@ export type LotProps = {
 
 export type FirstRunProps = {
   goHome: () => void;
-  lots: LotObject[];
 };
 
 export type HomeProps = {
@@ -60,7 +63,6 @@ export type AccountProps = {
   setPage: SetPage;
   config: GoatConfigType;
   setStateConfig: (newConfig: GoatConfigType) => void;
-  lots: LotObject[];
 }
 
 export type AppBarProps = {

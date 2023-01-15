@@ -21,7 +21,8 @@ function App(): JSX.Element {
   const [page, setPage] = useState<Pages>('loading');
   const [config, setStateConfig] = useState<GoatConfigType>({
     userType: 'student',
-    preferredLot: '',
+    commuterType: 'commuter',
+    isVisitor: false,
     favorites: [],
     firstOpen: true,
   });
@@ -29,26 +30,34 @@ function App(): JSX.Element {
   const [acknowledged, setAcknowledged] = useState<boolean>(false);
 
   const refreshPromise: RefreshLotPromiseFunction = () => {
-    return fetch('')
+    return fetch('http://130.215.168.43:5000/lots')
       .then(r => r.json())
-      .then(data => JSON.parse(data))
       .catch(error => {
         /* Use fake data */
-        const lot: LotData = {spaces: 10, name: 'West'};
-        const lot2: LotData = {spaces: 3, name: 'Library'};
-        const lot3: LotData = {spaces: 5, name: 'Hackfeld'};
+        const lot: LotData = {spaces: 10, name: 'West', types: ['Commuter']};
+        const lot2: LotData = {spaces: 3, name: 'Library', types: ['Visitor']};
+        const lot3: LotData = {spaces: 5, name: 'Hackfeld', types: ['Residential', 'Employee']};
         return [lot, lot2, lot3];
       });
   };
 
   const refreshLotData: RefreshLotDataFunction = () => {
     refreshPromise()
-      .then(r =>
-        setLotData(r.map(lot => {
-          return Object.assign({}, lot,
-            {isFavorite: config.favorites.includes(lot.name)});
-        }))
-      );
+      .then(r => {
+          const filteredLots = r.filter(lot => {
+            if (config.isVisitor && lot.types.includes('Visitor')) {
+              return true;
+            }
+            if (config.userType === 'student' && lot.types.includes('Employee')) {
+              return false;
+            }
+            return (config.commuterType === 'residential' && lot.types.includes('Residential'));
+          });
+          setLotData(filteredLots.map(lot => {
+            return Object.assign({}, lot,
+              {isFavorite: config.favorites.includes(lot.name)});
+          }));
+      });
   };
 
   const flipFavorite: FlipFavorite = (name: string) => {
@@ -85,7 +94,16 @@ function App(): JSX.Element {
         if (values[1] !== null) {
           const newConfig = JSON.parse(values[1]);
           setStateConfig(newConfig);
-          setLotData(values[0].map(lot => {
+          const filteredLots = values[0].filter(lot => {
+            if (config.isVisitor && lot.types.includes('Visitor')) {
+              return true;
+            }
+            if (config.userType === 'student' && lot.types.includes('Employee')) {
+              return false;
+            }
+            return (config.commuterType === 'residential' && lot.types.includes('Residential'));
+          });
+          setLotData(filteredLots.map(lot => {
             return Object.assign({}, lot,
               {isFavorite: newConfig.favorites.includes(lot.name)});
           }));
@@ -129,7 +147,6 @@ function App(): JSX.Element {
             setPage={setPage}
             config={config}
             setStateConfig={setStateConfig}
-            lots={lotData}
           />
         </SafeAreaProvider>
       )
