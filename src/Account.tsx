@@ -4,8 +4,12 @@ import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { Button, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import AppBar from "./AppBar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-function AccountPage({config, setStateConfig, lots}: AccountProps): JSX.Element {
+function AccountPage({page, setPage, config, setStateConfig, lots}: AccountProps): JSX.Element {
+  const { bottom } = useSafeAreaInsets();
+
   const userTypePress = (newUserType: 'student' | 'staff') => {
     const newConfig = {...config};
     newConfig.preferredLot = newUserType;
@@ -30,7 +34,7 @@ function AccountPage({config, setStateConfig, lots}: AccountProps): JSX.Element 
   );
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.flex}>
       <Button mode="contained-tonal"
               style={styles.button}
               onPress={() => userTypePress('student')}>
@@ -45,6 +49,7 @@ function AccountPage({config, setStateConfig, lots}: AccountProps): JSX.Element 
       <ScrollView style={{width: '100%', marginLeft: 10}}>
         {lotList}
       </ScrollView>
+      <AppBar page={page} bottom={bottom} setPage={setPage} />
     </SafeAreaView>
   );
 }

@@ -5,7 +5,7 @@ import { HomeProps, LotListProps, LotProps } from "./Types";
 import { useSafeAreaInsets} from "react-native-safe-area-context";
 import AppBar from "./AppBar";
 
-function Lot({ spaces, isFavorite, name , flipFavorite}: LotProps): JSX.Element {
+function Lot({ spaces, isFavorite, name, flipFavorite}: LotProps): JSX.Element {
   return (
     <Card style={{ marginBottom: 10 }}>
       <Card.Title
@@ -55,9 +55,7 @@ function LotList({ flipFavorite, lots, refresh }: LotListProps): JSX.Element {
   )
 }
 
-function HomePage({ flipFavorite, lots, refresh }: HomeProps): JSX.Element {
-  const [acknowledged, setAcknowledged] = useState<boolean>(false);
-
+function HomePage({ flipFavorite, lots, refresh, page, setPage, acknowledged, setAcknowledged }: HomeProps): JSX.Element {
   const { bottom } = useSafeAreaInsets();
   return (
     <PaperProvider>
@@ -69,7 +67,7 @@ function HomePage({ flipFavorite, lots, refresh }: HomeProps): JSX.Element {
             <Button icon={'refresh'} onPress={refresh}>
               Reload Data
             </Button>
-            <AppBar home={true} bottom={bottom} />
+            <AppBar page={page} bottom={bottom} setPage={setPage} />
           </>
         ) : (
           <Portal>

@@ -1,3 +1,7 @@
+import { SetStateAction } from "react";
+
+export type Pages = 'home' | 'loading' | 'account' | 'lot' | 'profile' | 'driving' | 'first_run' | 'error';
+
 export type GoatConfigType = {
   userType: 'student' | 'staff';
   preferredLot: string;
@@ -13,6 +17,8 @@ export type LotData = {
 export type RefreshLotPromiseFunction = () => Promise<LotData[]>;
 export type RefreshLotDataFunction = () => void;
 export type FlipFavorite = (name: string) => void;
+export type SetPage = (value: SetStateAction<Pages>) => void;
+export type SetAcknowledged = (value: SetStateAction<boolean>) => void;
 
 export type LotObject = {
   spaces: number;
@@ -37,6 +43,10 @@ export type HomeProps = {
   flipFavorite: FlipFavorite;
   lots: LotObject[];
   refresh: () => void;
+  page: Pages;
+  setPage: SetPage;
+  acknowledged: boolean;
+  setAcknowledged: SetAcknowledged;
 };
 
 export type LotListProps = {
@@ -45,15 +55,16 @@ export type LotListProps = {
   refresh: () => void;
 };
 
-
 export type AccountProps = {
+  page: Pages;
+  setPage: SetPage;
   config: GoatConfigType;
   setStateConfig: (newConfig: GoatConfigType) => void;
   lots: LotObject[];
 }
 
 export type AppBarProps = {
-  home?: Boolean;
-  account?: Boolean;
+  page: Pages;
   bottom: number;
+  setPage: SetPage;
 };

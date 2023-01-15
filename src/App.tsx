@@ -11,13 +11,11 @@ import {
   FlipFavorite,
   GoatConfigType,
   LotData,
-  LotObject,
+  LotObject, Pages,
   RefreshLotDataFunction,
   RefreshLotPromiseFunction
 } from "./Types";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
-type Pages = 'home' | 'loading' | 'account' | 'lot' | 'profile' | 'driving' | 'first_run' | 'error';
 
 function App(): JSX.Element {
   const [page, setPage] = useState<Pages>('loading');
@@ -28,6 +26,7 @@ function App(): JSX.Element {
     firstOpen: true,
   });
   const [lotData, setLotData] = useState<LotObject[]>([]);
+  const [acknowledged, setAcknowledged] = useState<boolean>(false);
 
   const refreshPromise: RefreshLotPromiseFunction = () => {
     return fetch('')
@@ -111,11 +110,29 @@ function App(): JSX.Element {
     case 'home':
       return (
         <SafeAreaProvider>
-          <HomePage flipFavorite={flipFavorite} lots={lotData} refresh={refreshLotData} />
+          <HomePage
+            flipFavorite={flipFavorite}
+            lots={lotData}
+            refresh={refreshLotData}
+            page={page}
+            setPage={setPage}
+            acknowledged={acknowledged}
+            setAcknowledged={setAcknowledged}
+          />
         </SafeAreaProvider>
       )
     case 'account':
-      return <AccountPage config={config} setStateConfig={setStateConfig} lots={lotData} />
+      return (
+        <SafeAreaProvider>
+          <AccountPage
+            page={page}
+            setPage={setPage}
+            config={config}
+            setStateConfig={setStateConfig}
+            lots={lotData}
+          />
+        </SafeAreaProvider>
+      )
     case 'lot':
       return <LotPage/>
     case 'driving':
