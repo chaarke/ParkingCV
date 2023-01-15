@@ -1,8 +1,9 @@
 # ParkingCV
-WPI Hack 2023
+WPI Hack 2023 - Best Community Hack 
 
 ## Build
 
-I am unsure how to create the build files with just the package lock files,
-but once I do I will put it here. Essentially, `android`, `ios`, `node_modules`,
-and `vendor` need to be filled with data.
+Build files can be created by navigating to the folder and running `npm install`
+Then, run `npx react-native eject` to generate `ios` and `android` build folders.
+
+Then, you can follow the usual steps to run react-native projects in your emulator of choice.
