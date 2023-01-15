@@ -35,7 +35,7 @@ function App(): JSX.Element {
         setPage('first_run');
       }
     });
-  }, []);
+  }, [config]);
 
   switch (page) {
     case 'loading':

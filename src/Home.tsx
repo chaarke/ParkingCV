@@ -1,12 +1,7 @@
 import { SafeAreaView, View } from "react-native";
 import React, { useState } from "react";
 import { Card, Button, IconButton, Provider as PaperProvider } from 'react-native-paper';
-
-type LotProps = {
-  spaces: number;
-  isFavorite: boolean;
-  name: string;
-};
+import { LotProps } from "./Types";
 
 type LotList = {
   lots: LotProps[]
@@ -49,14 +44,14 @@ function HomePage(): JSX.Element {
   let lot3: LotProps = { spaces: 10, isFavorite: true, name: 'Hackfeld' }
 
   return (
-    <SafeAreaView>
-      <PaperProvider>
+    <PaperProvider>
+      <SafeAreaView>
         <LotList lots={[lot, lot2, lot3]} />
         <Button icon={'refresh'}>
           Reload Data
         </Button>
-      </PaperProvider>
-    </SafeAreaView>
+      </SafeAreaView>
+    </PaperProvider>
   )
 }
 

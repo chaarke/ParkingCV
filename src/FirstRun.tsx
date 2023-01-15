@@ -5,14 +5,14 @@ import PagerView from "react-native-pager-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FirstRunProps } from "./Types";
 
-function FirstRunPage({goHome, lots}: FirstRunProps): JSX.Element {
+function FirstRunPage({ goHome, lots }: FirstRunProps): JSX.Element {
   const [userType, setUserType] = useState<null | 'student' | 'staff'>(null);
   const viewPagerRef = useRef<PagerView>(null);
 
   /* TODO temp data */
-  const lot = {spaces: 10, isFavorite: true, name: 'West'};
-  const lot2 = {spaces: 3, isFavorite: false, name: 'Library'};
-  const lot3 = {spaces: 5, isFavorite: true, name: 'Hackfeld'};
+  const lot = { spaces: 10, isFavorite: true, name: 'West' };
+  const lot2 = { spaces: 3, isFavorite: false, name: 'Library' };
+  const lot3 = { spaces: 5, isFavorite: true, name: 'Hackfeld' };
   const lotsTempList = [lot, lot2, lot3];
 
   const userTypePress = (newUserType: 'student' | 'staff') => {
@@ -34,27 +34,31 @@ function FirstRunPage({goHome, lots}: FirstRunProps): JSX.Element {
   };
 
   const lotList = lotsTempList.map((lot, idx) =>
-    <Button mode="contained" key={idx} onPress={() => lotPress(lot.name)}>{lot.name}</Button>
+    <Button mode="contained-tonal" key={idx} style={styles.button} onPress={() => lotPress(lot.name)}><Text variant="titleLarge">{lot.name}</Text></Button>
   );
 
   return (
     <SafeAreaView style={styles.flex}>
       <PagerView style={styles.flex} initialPage={0} ref={viewPagerRef}>
-        <View style={styles.view} key="1">
-          <Text style={styles.prompt}>I am a...</Text>
-          <Button mode="contained"
-                  compact={true}
-                  onPress={() => userTypePress('student')}
-          >Student</Button>
-          <Button mode="contained"
-                  compact={true}
-                  onPress={() => userTypePress('staff')}
-          >Staff</Button>
-          <Text style={styles.prompt}>Settings can be changed later</Text>
+
+        <View key="1" style={styles.view}>
+          <Text variant="displayLarge" style={styles.prompt}>I am a...</Text>
+          <Button mode="contained-tonal"
+            style={styles.button}
+            onPress={() => userTypePress('student')}>
+            <Text variant="titleLarge">Student</Text>
+          </Button>
+          <Button mode="contained-tonal"
+            style={styles.button}
+            onPress={() => userTypePress('staff')}>
+            <Text variant="titleLarge" >Staff</Text>
+          </Button>
+          <Text variant="labelLarge">Settings can be changed later</Text>
         </View>
-        <View key="2">
-          <Text style={styles.prompt}>My preferred lot is...</Text>
-          <ScrollView>
+
+        <View key="2" style={styles.view}>
+          <Text variant="displayLarge" style={styles.prompt}>My preferred lot is...</Text>
+          <ScrollView style={{width: '100%', marginLeft: 10}}>
             {lotList}
           </ScrollView>
         </View>
@@ -64,11 +68,11 @@ function FirstRunPage({goHome, lots}: FirstRunProps): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  flex: {flex: 1},
-  view: {height: '100%', width: '100%'},
-  prompt: {textAlign: 'center', textAlignVertical: 'center'},
+  flex: { flex: 1 },
+  view: { alignItems: "center", justifyContent: "center", margin: 40 },
+  prompt: { textAlign: 'center', textAlignVertical: 'center' },
   buttonGroup: {},
-  button: {height: 'auto', width: 'auto'},
+  button: { margin: 10, width: '90%', height: 'auto' },
 })
 
 export default FirstRunPage;
