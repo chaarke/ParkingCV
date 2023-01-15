@@ -1,7 +1,8 @@
 import { SafeAreaView, View } from "react-native";
 import React, { useState } from "react";
-import { Card, Button, IconButton, Provider as PaperProvider } from 'react-native-paper';
+import { Card, Button, IconButton, Provider as PaperProvider, Appbar } from 'react-native-paper';
 import { LotProps } from "./Types";
+import { SafeAreaProvider, useSafeAreaInsets} from "react-native-safe-area-context";
 
 type LotList = {
   lots: LotProps[]
@@ -38,20 +39,25 @@ function LotList(list: LotList): JSX.Element {
   )
 }
 
-function HomePage(): JSX.Element {
+const HomePage: React.FC = () => {
   let lot: LotProps = { spaces: 5, isFavorite: true, name: 'West' };
   let lot2: LotProps = { spaces: 3, isFavorite: false, name: 'Library' }
   let lot3: LotProps = { spaces: 10, isFavorite: true, name: 'Hackfeld' }
 
+  const { bottom } = useSafeAreaInsets();
+
   return (
-    <PaperProvider>
-      <SafeAreaView>
-        <LotList lots={[lot, lot2, lot3]} />
-        <Button icon={'refresh'}>
-          Reload Data
-        </Button>
-      </SafeAreaView>
-    </PaperProvider>
+      <PaperProvider>
+        <SafeAreaView>
+          <LotList lots={[lot, lot2, lot3]} />
+          <Button icon={'refresh'}>
+            Reload Data
+          </Button>
+          <Appbar safeAreaInsets={{bottom}} style={{ position: 'absolute', left: 0, right: 0, bottom: -375, height: 80+bottom }}>
+            <Appbar.Action icon={"home"} />
+          </Appbar>
+        </SafeAreaView>
+      </PaperProvider>
   )
 }
 

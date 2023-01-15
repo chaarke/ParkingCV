@@ -8,6 +8,7 @@ import FirstRunPage from "./FirstRun";
 import ErrorPage from "./ErrorPage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoatConfigType } from "./Types";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 type Pages = 'home' | 'loading' | 'account' | 'lot' | 'profile' | 'driving' | 'first_run';
 
@@ -39,21 +40,25 @@ function App(): JSX.Element {
 
   switch (page) {
     case 'loading':
-      return <LoadingPage/>
+      return <LoadingPage />
     case 'home':
-      return <HomePage/>
+      return (
+        <SafeAreaProvider>
+          <HomePage />
+        </SafeAreaProvider>
+      )
     case 'account':
-      return <AccountPage/>
+      return <AccountPage />
     case 'lot':
-      return <LotPage/>
+      return <LotPage />
     case 'profile':
-      return <ProfilePage/>
+      return <ProfilePage />
     case 'driving':
-      return <DrivingPage/>
+      return <DrivingPage />
     case 'first_run':
-      return <FirstRunPage goHome={() => setPage('home')} lots={null}/>
+      return <FirstRunPage goHome={() => setPage('home')} lots={null} />
     default:
-      return <ErrorPage/>
+      return <ErrorPage />
   }
 }
 
