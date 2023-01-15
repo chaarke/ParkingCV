@@ -73,8 +73,8 @@ function HomePage({ flipFavorite, lots, refresh, page, setPage, acknowledged, se
             <Modal contentContainerStyle={styles.popUpBackground}
                    visible={!acknowledged}
                    onDismiss={() => setAcknowledged(true)}>
-              <Text style={styles.bold}>Distracted driving is dangerous.</Text>
-              <Text style={styles.subText}>
+              <Text variant="headlineLarge" style={styles.bold}>Distracted driving is dangerous.</Text>
+              <Text variant="titleLarge" style={styles.subText}>
                 Always pay attention to the road. Follow local
                 and state driving laws.
               </Text>
@@ -93,12 +93,11 @@ function HomePage({ flipFavorite, lots, refresh, page, setPage, acknowledged, se
 }
 
 const styles = StyleSheet.create({
-  bold: {fontWeight: 'bold', textAlign: 'center', alignContent: 'stretch',
-    fontSize: 42, paddingLeft: 5, paddingRight: 5},
-  subText: {fontSize: 32, textAlign: 'center', paddingTop: 5, paddingLeft: 12,
+  bold: {fontWeight: 'bold', textAlign: 'center', alignContent: 'stretch', paddingLeft: 10, paddingRight: 10, margin: 10},
+  subText: {textAlign: 'center', paddingTop: 5, paddingLeft: 12,
   paddingRight: 12},
-  popUpBackground: {backgroundColor: 'white'},
-  button: {height: 'auto'},
+  popUpBackground: {backgroundColor: 'white', marginHorizontal: 20, paddingVertical: 20, borderRadius: 10},
+  button: {height: 'auto', padding: 10},
   buttonText: {fontSize: 32, lineHeight: 36}
 });
 
