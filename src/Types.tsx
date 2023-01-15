@@ -14,13 +14,13 @@ export type RefreshLotPromiseFunction = () => Promise<LotData[]>;
 export type RefreshLotDataFunction = () => void;
 export type FlipFavorite = (name: string) => void;
 
-export type LotProps = {
+export type LotObject = {
   spaces: number;
   isFavorite: boolean;
   name: string;
 };
 
-export type LotPropsReal = {
+export type LotProps = {
   spaces: number;
   isFavorite: boolean;
   name: string;
@@ -30,16 +30,22 @@ export type LotPropsReal = {
 
 export type FirstRunProps = {
   goHome: () => void;
-  lots: LotProps[];
+  lots: LotObject[];
 };
 
 export type HomeProps = {
   flipFavorite: FlipFavorite;
-  lots: LotProps[];
+  lots: LotObject[];
   refresh: () => void;
 };
 
 export type LotListProps = {
   flipFavorite: FlipFavorite;
-  lots: LotProps[];
+  lots: LotObject[];
 };
+
+export type AccountProps = {
+  config: GoatConfigType;
+  setStateConfig: (newConfig: GoatConfigType) => void;
+  lots: LotObject[];
+}

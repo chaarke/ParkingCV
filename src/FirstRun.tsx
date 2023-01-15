@@ -3,23 +3,11 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import PagerView from "react-native-pager-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FirstRunProps, LotProps } from "./Types";
+import { FirstRunProps, LotObject } from "./Types";
 
 function FirstRunPage({ goHome, lots }: FirstRunProps): JSX.Element {
   const [userType, setUserType] = useState<null | 'student' | 'staff'>(null);
   const viewPagerRef = useRef<PagerView>(null);
-
-
-  let lotsList: LotProps[];
-  if (lots.length) {
-    lotsList = lots;
-  } else {
-    /* test data */
-    const lot = { spaces: 10, isFavorite: true, name: 'West' };
-    const lot2 = { spaces: 3, isFavorite: false, name: 'Library' };
-    const lot3 = { spaces: 5, isFavorite: true, name: 'Hackfeld' };
-    lotsList = [lot, lot2, lot3];
-  }
 
   const userTypePress = (newUserType: 'student' | 'staff') => {
     setUserType(newUserType);
@@ -39,7 +27,7 @@ function FirstRunPage({ goHome, lots }: FirstRunProps): JSX.Element {
     }
   };
 
-  const lotList: JSX.Element[] = lotsList.map((lot, idx) =>
+  const lotList: JSX.Element[] = lots.map((lot, idx) =>
     <Button mode="contained-tonal" key={idx} style={styles.button} onPress={() => lotPress(lot.name)}><Text variant="titleLarge">{lot.name}</Text></Button>
   );
 

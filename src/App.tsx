@@ -11,7 +11,7 @@ import {
   FlipFavorite,
   GoatConfigType,
   LotData,
-  LotProps,
+  LotObject,
   RefreshLotDataFunction,
   RefreshLotPromiseFunction
 } from "./Types";
@@ -27,7 +27,7 @@ function App(): JSX.Element {
     favorites: [],
     firstOpen: true,
   });
-  const [lotData, setLotData] = useState<LotProps[]>([]);
+  const [lotData, setLotData] = useState<LotObject[]>([]);
 
   const refreshPromise: RefreshLotPromiseFunction = () => {
     return fetch('')
@@ -115,7 +115,7 @@ function App(): JSX.Element {
         </SafeAreaProvider>
       )
     case 'account':
-      return <AccountPage />
+      return <AccountPage config={config} setStateConfig={setStateConfig} lots={lotData} />
     case 'lot':
       return <LotPage/>
     case 'driving':

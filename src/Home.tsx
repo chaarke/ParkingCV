@@ -1,10 +1,10 @@
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { Card, Button, IconButton, Provider as PaperProvider, Modal, Portal, Text, Appbar } from "react-native-paper";
-import { HomeProps, LotListProps, LotPropsReal } from "./Types";
+import { HomeProps, LotListProps, LotProps } from "./Types";
 import { useSafeAreaInsets} from "react-native-safe-area-context";
 
-function Lot({ spaces, isFavorite, name , flipFavorite}: LotPropsReal): JSX.Element {
+function Lot({ spaces, isFavorite, name , flipFavorite}: LotProps): JSX.Element {
   return (
     <Card style={{ marginBottom: 10 }}>
       <Card.Title
@@ -53,7 +53,7 @@ function HomePage({flipFavorite, lots, refresh}: HomeProps): JSX.Element {
             <Button icon={'refresh'} onPress={refresh}>
               Reload Data
             </Button>
-            <Appbar safeAreaInsets={{bottom}} style={{ position: 'absolute', left: 0, right: 0, bottom: -375, height: 80+bottom }}>
+            <Appbar safeAreaInsets={{bottom}} style={{ position: 'absolute', left: 0, right: 0, bottom: -320, height: 80+bottom, paddingLeft: 20 }}>
               <Appbar.Action accessibilityLanguage={"en-us"} accessibilityLabelledBy={""} icon={"home"} />
             </Appbar>
           </>
@@ -63,11 +63,17 @@ function HomePage({flipFavorite, lots, refresh}: HomeProps): JSX.Element {
                    visible={!acknowledged}
                    onDismiss={() => setAcknowledged(true)}>
               <Text style={styles.bold}>Distracted driving is dangerous.</Text>
-              <Text>
-                Always pay attention to the road and follow local
+              <Text style={styles.subText}>
+                Always pay attention to the road. Follow local
                 and state driving laws.
               </Text>
-              <Button onPress={() => setAcknowledged(true)}>I Understand</Button>
+              <Button
+                mode='text'
+                style={styles.button}
+                onPress={() => setAcknowledged(true)}
+                compact={false}
+                labelStyle={styles.buttonText}
+              >I Understand</Button>
             </Modal>
           </Portal>
         )}
@@ -77,8 +83,13 @@ function HomePage({flipFavorite, lots, refresh}: HomeProps): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  bold: {fontWeight: 'bold'},
-  popUpBackground: {backgroundColor: 'white'}
+  bold: {fontWeight: 'bold', textAlign: 'center', alignContent: 'stretch',
+    fontSize: 42, paddingLeft: 5, paddingRight: 5},
+  subText: {fontSize: 32, textAlign: 'center', paddingTop: 5, paddingLeft: 12,
+  paddingRight: 12},
+  popUpBackground: {backgroundColor: 'white'},
+  button: {height: 'auto'},
+  buttonText: {fontSize: 32, lineHeight: 36}
 });
 
 export default HomePage;
