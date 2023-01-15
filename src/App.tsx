@@ -16,6 +16,7 @@ import {
   RefreshLotPromiseFunction
 } from "./Types";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 
 function App(): JSX.Element {
   const [page, setPage] = useState<Pages>('loading');
@@ -34,9 +35,9 @@ function App(): JSX.Element {
       .then(data => JSON.parse(data))
       .catch(error => {
         /* Use fake data */
-        const lot: LotData = {spaces: 10, name: 'West'};
-        const lot2: LotData = {spaces: 3, name: 'Library'};
-        const lot3: LotData = {spaces: 5, name: 'Hackfeld'};
+        const lot: LotData = { spaces: 10, name: 'West' };
+        const lot2: LotData = { spaces: 3, name: 'Library' };
+        const lot3: LotData = { spaces: 5, name: 'Hackfeld' };
         return [lot, lot2, lot3];
       });
   };
@@ -46,7 +47,7 @@ function App(): JSX.Element {
       .then(r =>
         setLotData(r.map(lot => {
           return Object.assign({}, lot,
-            {isFavorite: config.favorites.includes(lot.name)});
+            { isFavorite: config.favorites.includes(lot.name) });
         }))
       );
   };
@@ -64,7 +65,7 @@ function App(): JSX.Element {
     });
     setLotData(newLots);
 
-    const newConfig = {...config};
+    const newConfig = { ...config };
     if (newFavorite) {
       // Add the name to the favorites list
       newConfig.favorites.push(name);
@@ -75,6 +76,52 @@ function App(): JSX.Element {
     setStateConfig(newConfig);
     AsyncStorage.setItem('config', JSON.stringify(newConfig));
   };
+
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      "primary": "rgb(154, 64, 87)",
+      "onPrimary": "rgb(255, 255, 255)",
+      "primaryContainer": "rgb(255, 217, 223)",
+      "onPrimaryContainer": "rgb(63, 0, 22)",
+      "secondary": "rgb(117, 86, 92)",
+      "onSecondary": "rgb(255, 255, 255)",
+      "secondaryContainer": "rgb(255, 217, 223)",
+      "onSecondaryContainer": "rgb(43, 21, 26)",
+      "tertiary": "rgb(122, 87, 50)",
+      "onTertiary": "rgb(255, 255, 255)",
+      "tertiaryContainer": "rgb(255, 220, 188)",
+      "onTertiaryContainer": "rgb(44, 23, 0)",
+      "error": "rgb(186, 26, 26)",
+      "onError": "rgb(255, 255, 255)",
+      "errorContainer": "rgb(255, 218, 214)",
+      "onErrorContainer": "rgb(65, 0, 2)",
+      "background": "rgb(255, 251, 255)",
+      "onBackground": "rgb(32, 26, 27)",
+      "surface": "rgb(255, 251, 255)",
+      "onSurface": "rgb(32, 26, 27)",
+      "surfaceVariant": "rgb(243, 221, 224)",
+      "onSurfaceVariant": "rgb(82, 67, 69)",
+      "outline": "rgb(132, 115, 117)",
+      "outlineVariant": "rgb(214, 194, 196)",
+      "shadow": "rgb(0, 0, 0)",
+      "scrim": "rgb(0, 0, 0)",
+      "inverseSurface": "rgb(54, 47, 48)",
+      "inverseOnSurface": "rgb(250, 238, 238)",
+      "inversePrimary": "rgb(255, 177, 192)",
+      "elevation": {
+        "level0": "transparent",
+        "level1": "rgb(250, 242, 247)",
+        "level2": "rgb(247, 236, 242)",
+        "level3": "rgb(244, 230, 237)",
+        "level4": "rgb(243, 229, 235)",
+        "level5": "rgb(241, 225, 232)"
+      },
+      "surfaceDisabled": "rgba(32, 26, 27, 0.12)",
+      "onSurfaceDisabled": "rgba(32, 26, 27, 0.38)",
+      "backdrop": "rgba(58, 45, 47, 0.4)"
+    }
+  }
 
   useEffect(() => {
     Promise.all([
@@ -87,13 +134,13 @@ function App(): JSX.Element {
           setStateConfig(newConfig);
           setLotData(values[0].map(lot => {
             return Object.assign({}, lot,
-              {isFavorite: newConfig.favorites.includes(lot.name)});
+              { isFavorite: newConfig.favorites.includes(lot.name) });
           }));
           setPage('home');
         } else {
           /* No config is set. Request the first run page. */
           setLotData(values[0].map(lot => {
-            return Object.assign({}, lot, {isFavorite: false});
+            return Object.assign({}, lot, { isFavorite: false });
           }));
           setPage('first_run');
         }
@@ -110,35 +157,43 @@ function App(): JSX.Element {
     case 'home':
       return (
         <SafeAreaProvider>
-          <HomePage
-            flipFavorite={flipFavorite}
-            lots={lotData}
-            refresh={refreshLotData}
-            page={page}
-            setPage={setPage}
-            acknowledged={acknowledged}
-            setAcknowledged={setAcknowledged}
-          />
+          <PaperProvider theme={theme}>
+            <HomePage
+              flipFavorite={flipFavorite}
+              lots={lotData}
+              refresh={refreshLotData}
+              page={page}
+              setPage={setPage}
+              acknowledged={acknowledged}
+              setAcknowledged={setAcknowledged}
+            />
+          </PaperProvider>
         </SafeAreaProvider>
       )
     case 'account':
       return (
         <SafeAreaProvider>
-          <AccountPage
-            page={page}
-            setPage={setPage}
-            config={config}
-            setStateConfig={setStateConfig}
-            lots={lotData}
-          />
+          <PaperProvider theme={theme}>
+            <AccountPage
+              page={page}
+              setPage={setPage}
+              config={config}
+              setStateConfig={setStateConfig}
+              lots={lotData}
+            />
+          </PaperProvider>
         </SafeAreaProvider>
       )
     case 'lot':
-      return <LotPage/>
+      return <LotPage />
     case 'driving':
       return <DrivingPage />
     case 'first_run':
-      return <FirstRunPage goHome={() => setPage('home')} lots={lotData}/>
+      return (
+        <PaperProvider theme={theme}>
+          <FirstRunPage goHome={() => setPage('home')} lots={lotData} />
+        </PaperProvider>
+      )
     case 'error':
     default:
       return <ErrorPage />

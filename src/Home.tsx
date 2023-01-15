@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet, RefreshControl, ScrollView } from "react-native";
 import React, { useState } from "react";
-import { Card, Button, IconButton, Provider as PaperProvider, Modal, Portal, Text } from "react-native-paper";
+import { Card, Button, IconButton, Modal, Portal, Text } from "react-native-paper";
 import { HomeProps, LotListProps, LotProps } from "./Types";
 import { useSafeAreaInsets} from "react-native-safe-area-context";
 import AppBar from "./AppBar";
@@ -58,7 +58,6 @@ function LotList({ flipFavorite, lots, refresh }: LotListProps): JSX.Element {
 function HomePage({ flipFavorite, lots, refresh, page, setPage, acknowledged, setAcknowledged }: HomeProps): JSX.Element {
   const { bottom } = useSafeAreaInsets();
   return (
-    <PaperProvider>
       <SafeAreaView style={{ flex: 1 }}>
         {acknowledged ? (
           <>
@@ -90,7 +89,6 @@ function HomePage({ flipFavorite, lots, refresh, page, setPage, acknowledged, se
           </Portal>
         )}
       </SafeAreaView>
-    </PaperProvider>
   )
 }
 
