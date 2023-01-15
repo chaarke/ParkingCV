@@ -29,23 +29,25 @@ function AccountPage({page, setPage, config, setStateConfig, lots}: AccountProps
       key={idx}
       style={styles.button}
       onPress={() => lotPress(lot.name)}>
-      {lot.name}{config.preferredLot === lot.name ? <Icon name="check" /> : null }
+      <Text variant="titleLarge">{lot.name} </Text>{config.preferredLot === lot.name ? <Icon name="check" size={24}/> : null }
     </Button>
   );
 
   return (
     <SafeAreaView style={styles.flex}>
+      <Text variant="headlineLarge" style={{ margin: 20, marginTop: 40}}>Account</Text>
+      
       <Button mode="contained-tonal"
               style={styles.button}
               onPress={() => userTypePress('student')}>
-        <Text variant="titleLarge">Student{config.userType === 'student' ? <Icon name="check" /> : null }</Text>
+        <Text variant="titleLarge">Student {config.userType === 'student' ? <Icon name="check" size={24}/> : null }</Text>
       </Button>
       <Button mode="contained-tonal"
               style={styles.button}
               onPress={() => userTypePress('staff')}>
-        <Text variant="titleLarge" >Staff{config.userType === 'staff' ? <Icon name="check" /> : null }</Text>
+        <Text variant="titleLarge" >Staff {config.userType === 'staff' ? <Icon name="check" size={24} /> : null }</Text>
       </Button>
-
+      <Text variant="headlineLarge" style={{ margin: 20, marginTop: 20}}>Preferred Lot</Text>
       <ScrollView style={{width: '100%', marginLeft: 10}}>
         {lotList}
       </ScrollView>
