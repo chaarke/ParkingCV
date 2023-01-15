@@ -18,6 +18,21 @@ import {
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 
+function filterLots(lots: LotData[], config: GoatConfigType): LotData[] {
+  return lots.filter(lot => {
+    if (config.isVisitor) {
+      return lot.types.includes('Visitor');
+    }
+    if (config.userType === 'student' && lot.types.includes('Employee')) {
+      return false;
+    }
+    if (config.commuterType === 'residential' && lot.types.includes('Residential')) {
+      return true;
+    }
+    return config.commuterType === 'commuter' && lot.types.includes('Commuter');
+  });
+}
+
 function App(): JSX.Element {
   const [page, setPage] = useState<Pages>('loading');
   const [config, setStateConfig] = useState<GoatConfigType>({
@@ -45,19 +60,11 @@ function App(): JSX.Element {
   const refreshLotData: RefreshLotDataFunction = () => {
     refreshPromise()
       .then(r => {
-          const filteredLots = r.filter(lot => {
-            if (config.isVisitor && lot.types.includes('Visitor')) {
-              return true;
-            }
-            if (config.userType === 'student' && lot.types.includes('Employee')) {
-              return false;
-            }
-            return (config.commuterType === 'residential' && lot.types.includes('Residential'));
-          });
-          setLotData(filteredLots.map(lot => {
-            return Object.assign({}, lot,
-              { isFavorite: config.favorites.includes(lot.name) });
-          }));
+        const filteredLots = filterLots(r, config);
+        setLotData(filteredLots.map(lot => {
+          return Object.assign({}, lot,
+            { isFavorite: config.favorites.includes(lot.name) });
+        }));
       });
   };
 
@@ -141,15 +148,7 @@ function App(): JSX.Element {
         if (values[1] !== null) {
           const newConfig = JSON.parse(values[1]);
           setStateConfig(newConfig);
-          const filteredLots = values[0].filter(lot => {
-            if (config.isVisitor && lot.types.includes('Visitor')) {
-              return true;
-            }
-            if (config.userType === 'student' && lot.types.includes('Employee')) {
-              return false;
-            }
-            return (config.commuterType === 'residential' && lot.types.includes('Residential'));
-          });
+          const filteredLots = filterLots(values[0], newConfig);
           setLotData(filteredLots.map(lot => {
             return Object.assign({}, lot,
               { isFavorite: newConfig.favorites.includes(lot.name) });
@@ -164,7 +163,6 @@ function App(): JSX.Element {
         }
       })
       .catch(error => {
-        console.error(error);
         setPage('error');
       });
   }, []);
@@ -207,7 +205,8 @@ function App(): JSX.Element {
     case 'first_run':
       return (
         <PaperProvider theme={theme}>
-          <FirstRunPage goHome={() => setPage('home')} />
+          <FirstRunPage setStateConfig={setStateConfig} goHome={() => setPage('home')}
+                        refreshLotData={refreshLotData}/>
         </PaperProvider>
       )
     case 'error':

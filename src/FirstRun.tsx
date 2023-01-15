@@ -4,8 +4,9 @@ import { Button, Text } from "react-native-paper";
 import PagerView from "react-native-pager-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FirstRunProps } from "./Types";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-function FirstRunPage({ goHome }: FirstRunProps): JSX.Element {
+function FirstRunPage({ setStateConfig, goHome, refreshLotData }: FirstRunProps): JSX.Element {
   const [userType, setUserType] = useState<null | 'student' | 'staff'>(null);
   const [commuterType, setCommuterType] = useState<null | 'commuter' | 'residential'>(null);
   const viewPagerRef = useRef<PagerView>(null);
@@ -24,13 +25,16 @@ function FirstRunPage({ goHome }: FirstRunProps): JSX.Element {
     } else if (commuterType === null) {
       viewPagerRef.current?.setPage(1);
     } else {
-      AsyncStorage.setItem('config', JSON.stringify({
+      const newConfig = {
         userType: userType,
         commuterType: commuterType,
         isVisitor: newIsVisitor,
         favorites: [],
         firstOpen: false
-      }));
+      };
+      setStateConfig(newConfig);
+      AsyncStorage.setItem('config', JSON.stringify(newConfig));
+      refreshLotData();
       goHome();
     }
   };
@@ -43,12 +47,12 @@ function FirstRunPage({ goHome }: FirstRunProps): JSX.Element {
           <Button mode="contained-tonal"
             style={styles.button}
             onPress={() => userTypePress('student')}>
-            <Text variant="titleLarge">Student</Text>
+            <Text variant="titleLarge">Student {userType === 'student' ? <Icon name="check" size={24}/> : null }</Text>
           </Button>
           <Button mode="contained-tonal"
             style={styles.button}
             onPress={() => userTypePress('staff')}>
-            <Text variant="titleLarge">Staff</Text>
+            <Text variant="titleLarge">Staff {userType === 'staff' ? <Icon name="check" size={24} /> : null }</Text>
           </Button>
           <Text variant="labelLarge">Settings can be changed later</Text>
         </View>
@@ -58,12 +62,12 @@ function FirstRunPage({ goHome }: FirstRunProps): JSX.Element {
           <Button mode="contained-tonal"
                   style={styles.button}
                   onPress={() => commuterTypePress('commuter')}>
-            <Text variant="titleLarge">Commuter</Text>
+            <Text variant="titleLarge">Commuter {commuterType === 'commuter' ? <Icon name="check" size={24}/> : null }</Text>
           </Button>
           <Button mode="contained-tonal"
                   style={styles.button}
                   onPress={() => commuterTypePress('residential')}>
-            <Text variant="titleLarge">Resident</Text>
+            <Text variant="titleLarge">Resident {commuterType === 'residential' ? <Icon name="check" size={24} /> : null }</Text>
           </Button>
         </View>
 
@@ -71,12 +75,12 @@ function FirstRunPage({ goHome }: FirstRunProps): JSX.Element {
           <Text variant="displayLarge" style={styles.prompt}>I am a...</Text>
           <Button mode="contained-tonal"
                   style={styles.button}
-                  onPress={() => visitorPress(true)}>
+                  onPress={() => visitorPress(false)}>
             <Text variant="titleLarge">Regular</Text>
           </Button>
           <Button mode="contained-tonal"
                   style={styles.button}
-                  onPress={() => visitorPress(false)}>
+                  onPress={() => visitorPress(true)}>
             <Text variant="titleLarge">Visitor</Text>
           </Button>
         </View>

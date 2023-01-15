@@ -22,6 +22,7 @@ export type RefreshLotDataFunction = () => void;
 export type FlipFavorite = (name: string) => void;
 export type SetPage = (value: SetStateAction<Pages>) => void;
 export type SetAcknowledged = (value: SetStateAction<boolean>) => void;
+export type SetStateConfig = (value: SetStateAction<GoatConfigType>) => void;
 
 export type LotObject = {
   spaces: number;
@@ -39,7 +40,9 @@ export type LotProps = {
 
 
 export type FirstRunProps = {
+  setStateConfig: SetStateConfig;
   goHome: () => void;
+  refreshLotData: RefreshLotDataFunction;
 };
 
 export type HomeProps = {
