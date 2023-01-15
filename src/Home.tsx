@@ -1,7 +1,8 @@
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
-import { Card, Button, IconButton, Provider as PaperProvider, Modal, Portal, Text } from "react-native-paper";
+import { Card, Button, IconButton, Provider as PaperProvider, Modal, Portal, Text, Appbar } from "react-native-paper";
 import { HomeProps, LotListProps, LotPropsReal } from "./Types";
+import { useSafeAreaInsets} from "react-native-safe-area-context";
 
 function Lot({ spaces, isFavorite, name , flipFavorite}: LotPropsReal): JSX.Element {
   return (
@@ -42,7 +43,7 @@ function LotList({flipFavorite, lots}: LotListProps): JSX.Element {
 
 function HomePage({flipFavorite, lots, refresh}: HomeProps): JSX.Element {
   const [acknowledged, setAcknowledged] = useState<boolean>(false);
-
+  const { bottom } = useSafeAreaInsets();
   return (
     <PaperProvider>
       <SafeAreaView>
@@ -52,6 +53,9 @@ function HomePage({flipFavorite, lots, refresh}: HomeProps): JSX.Element {
             <Button icon={'refresh'} onPress={refresh}>
               Reload Data
             </Button>
+            <Appbar safeAreaInsets={{bottom}} style={{ position: 'absolute', left: 0, right: 0, bottom: -375, height: 80+bottom }}>
+              <Appbar.Action accessibilityLanguage={"en-us"} accessibilityLabelledBy={""} icon={"home"} />
+            </Appbar>
           </>
         ) : (
           <Portal>

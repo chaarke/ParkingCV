@@ -15,6 +15,7 @@ import {
   RefreshLotDataFunction,
   RefreshLotPromiseFunction
 } from "./Types";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 type Pages = 'home' | 'loading' | 'account' | 'lot' | 'profile' | 'driving' | 'first_run' | 'error';
 
@@ -106,20 +107,24 @@ function App(): JSX.Element {
 
   switch (page) {
     case 'loading':
-      return <LoadingPage/>
+      return <LoadingPage />
     case 'home':
-      return <HomePage flipFavorite={flipFavorite} lots={lotData} refresh={refreshLotData}/>
+      return (
+        <SafeAreaProvider>
+          <HomePage flipFavorite={flipFavorite} lots={lotData} refresh={refreshLotData} />
+        </SafeAreaProvider>
+      )
     case 'account':
-      return <AccountPage/>
+      return <AccountPage />
     case 'lot':
       return <LotPage/>
     case 'driving':
-      return <DrivingPage/>
+      return <DrivingPage />
     case 'first_run':
       return <FirstRunPage goHome={() => setPage('home')} lots={lotData}/>
     case 'error':
     default:
-      return <ErrorPage/>
+      return <ErrorPage />
   }
 }
 
