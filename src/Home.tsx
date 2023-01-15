@@ -23,7 +23,7 @@ function Lot({ spaces, isFavorite, name, flipFavorite}: LotProps): JSX.Element {
             accessibilityLanguage="us-en" />
           : <Button
             icon='heart-outline'
-            mode={"contained"}
+            mode={"contained-tonal"}
             onPress={() => flipFavorite(name)}
           >Favorite</Button>
         }
