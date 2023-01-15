@@ -42,6 +42,7 @@ export type HomeProps = {
 export type LotListProps = {
   flipFavorite: FlipFavorite;
   lots: LotObject[];
+  refresh: () => void;
 };
 
 export type AccountProps = {
