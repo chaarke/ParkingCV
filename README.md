@@ -1,5 +1,5 @@
 # ParkingCV
-WPI Hack 2023 - Best Community Hack 
+WPI Hack 2023 - Best Community Hack -
 https://devpost.com/software/gompei-s-lot-spotter
 
 ## Inspiration
